@@ -33,7 +33,7 @@
    Link your local repository to the GitHub repository:
 
    ```bash
-   https://github.com/megelclarkchangcoco/Final_Project.git
+   https://github.com/megelclarkchangcoco/Seek4Smile-Dental-Appointment-Web-Management-System
    ```
 7. **Push the changes to GitHub**:
    Push your local repository to the GitHub repository:
@@ -48,7 +48,7 @@
 1. **Add the remote repository**:
    Link your local repository to the GitHub repository:
    ```bash
-   git remote add origin  https://github.com/megelclarkchangcoco/Final_Project.git
+   git remote add origin https://github.com/megelclarkchangcoco/Seek4Smile-Dental-Appointment-Web-Management-System
    ```
 2. **Rename the branch to main**:
    Change your branch name to main (if not already set):
