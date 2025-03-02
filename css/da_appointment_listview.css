@@ -1,0 +1,235 @@
+* {
+    font-family: Lato, sans-serif;
+}
+
+
+/* Search Bar *****/
+
+/* Main container for the search bar, search button and filter button */
+.search_group {
+    width: 950px;
+    display: flex;
+    gap: 20px;
+}
+
+/* Container for the search field */
+.search_box {
+    width: 597px;
+    height: 49px;
+    background: #fff;
+    border: 1px solid #A7A7A7;
+    margin-left: 35px;
+    box-sizing: border-box;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    position: relative;
+}
+
+/* Container for the text */
+.row {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 5px; /* for the gap of the text and the icon */
+}
+
+/* Input properties */
+input {
+    flex: 1; 
+    height: 19px;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    font-size: 16px;
+    color: #1E1E1E;
+}
+
+input::placeholder {
+    color: #A7A7A7; /* Placeholder color */
+}
+
+/*Search properties & hover settings */
+#search_btn {
+    cursor: pointer;
+    width: 160px;
+    height: 49px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #0085AA;
+    color: white;
+    border: 0;
+}
+#search_btn:hover {
+    background-color: #35C3A3; /*Change bg */
+}
+
+.main_content h1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #CD6A30;
+    margin-left: 35px;
+}   
+
+/* Appointment Request List Table *****/
+
+.appointments-table {
+    width: 1530px;
+    margin-left: 35px;
+    margin-top: 20px;
+}
+
+
+/*Border*/
+.appointments-table, .appointments-table th, .appointments-table td {
+    border: 1px solid #0085AA;
+    border-collapse: collapse;
+}
+
+/*Table sizing & other properties*/
+.appointments-table {
+    margin-left: 35px;
+    margin-top: 35px;
+    width: 1530px;
+    height: auto;
+}
+
+/*Header properties*/
+.appointments-table thead tr {
+    color:#FFFFFF;
+    background-color: #35C3A3;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.appointments-table th, .appointments-table td {
+    padding: 12px 10px; /* Padding for the content */
+}
+
+.appointments-table td {
+    font-size: 14px;
+    font-style: normal;
+}
+
+/* Center alignment for certain columns */
+.cell_center_content {
+    text-align: center;
+}
+
+/* Alternating row colors */
+.appointments-table tbody tr:nth-child(even) {  background-color: #f3f4f6;}
+.appointments-table tbody tr:nth-child(odd)  {  background-color: #fff;}
+
+/* Hover effect for the table rows */
+.appointments-table tbody tr:hover {
+    background-color: #e9f1ff;
+}
+
+/* Button properties */
+/* Parent container styles */
+.cell_center_content {
+    display: flex; /* Arrange buttons in a row */
+    gap: 1rem; /* Space between buttons */
+    justify-content: center; /* Center buttons horizontally */
+    align-items: center; /* Center buttons vertically */
+}
+
+.cancel_btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    border: 0;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    color: #FF2F2F;
+    border: 1px solid #FF2F2F;
+}
+
+.payment_type {
+    background-color: #EFF8FF;
+    color:#0085AA;
+    border-radius: 5px;
+    border: 1px solid #0085AA;
+    padding: 0.2rem;
+}
+
+.paid {
+    display: inline-block;
+    white-space: nowrap;
+    width: auto;
+    padding: 0.5rem;
+    background-color: rgb(48,205, 48, 0.3);
+    color:#0085AA;
+    border-radius: 5px;
+    
+    
+}
+
+.pending {
+    display: inline-block;
+    white-space: nowrap;
+    width: auto;
+    padding: 0.5rem;
+    background-color: rgb(255,138, 69, 0.3);
+    color:#0085AA;
+    border-radius: 5px;
+    
+}
+
+.overdue {
+    display: inline-block;
+    white-space: nowrap;
+    width: auto;
+    padding: 0.5rem;
+    background-color: rgb(255,255, 47, 0.3);
+    color:#0085AA;
+    border-radius: 5px;
+}
+
+.upcoming, .completed, .cancelled {
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+    width: auto;
+    padding: 0.5rem;
+    color:#0085AA;
+    border-radius: 5px;
+}
+
+.upcoming {
+    background-color: rgb(255,138, 69, 0.5);
+}
+.completed {
+    background-color: rgb(48,205, 48, 0.5);
+}
+.cancelled {
+    background-color: rgb(255,47, 47, 0.5);
+}
+
+.mark_as_complete {
+    display: inline-flex; /* Ensures buttons stay inline */
+    white-space: nowrap; /* Prevents text from breaking into multiple lines */
+    gap: 0.5rem;
+    background-color: transparent;
+    border: 0;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    color: #35C3A3;
+    border: 1px solid #35C3A3;
+    
+    
+}
+
+
+.action_appointment {
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+}

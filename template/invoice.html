@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .invoice-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .invoice-header img {
+            max-height: 50px;
+        }
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+        .invoice-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-details table td {
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+        .invoice-details table td:first-child {
+            font-weight: bold;
+            width: 30%;
+        }
+        .invoice-services {
+            margin-bottom: 20px;
+        }
+        .invoice-services table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-services table th,
+        .invoice-services table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        .invoice-services table th {
+            background-color: #f4f4f4;
+        }
+        .invoice-total {
+            text-align: right;
+        }
+        .invoice-total table {
+            display: inline-block;
+            border-collapse: collapse;
+        }
+        .invoice-total table td {
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+        .invoice-total table td:first-child {
+            font-weight: bold;
+        }
+        .invoice-notes {
+            margin-top: 20px;
+        }
+        .invoice-notes p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <h1>MEDICAL INVOICE</h1>
+            <img src="src/img/invoicelogo2.png" alt="Logo">
+        </div>
+        <div class="invoice-details">
+            <table>
+                <tr>
+                    <td>Bill To:</td>
+                    <td>Alyssa E. Navarro</td>
+                </tr>   
+                <tr>
+                    <td>Invoice Number:</td>
+                    <td>100152AD</td>
+                </tr>
+                <tr>
+                    <td>Patient Address:</td>
+                    <td>Hidalgo St., Pasay City, Manila</td>
+                </tr>
+                <tr>
+                    <td>ADM Date:</td>
+                    <td>30 October 2024</td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td>0998-786-1111</td>
+                </tr>
+                <tr>
+                    <td>Payment Due By:</td>
+                    <td>30 November 2024</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>navarroalyssa@gmail.com</td>
+                </tr>
+                <tr>
+                    <td>Physician:</td>
+                    <td>Arnaldo A. Turillo, DMD</td>
+                </tr>
+            </table>
+        </div>
+        <div class="invoice-services">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SERVICE DATE</th>
+                        <th>SERVICES PERFORMED</th>
+                        <th>MEDICATION</th>
+                        <th>FEE</th>
+                        <th>ADJ</th>
+                        <th>AMOUNT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>30 October 2024</td>
+                        <td>Braces Adjustment</td>
+                        <td>Ibuprofen 500mg</td>
+                        <td>P1,000</td>
+                        <td>P1,000</td>
+                        <td>P1,000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="invoice-total">
+            <table>
+                <tr>
+                    <td>SUBTOTAL:</td>
+                    <td>P1,000</td>
+                </tr>
+                <tr>
+                    <td>SALES TAX:</td>
+                    <td>P20</td>
+                </tr>
+                <tr>
+                    <td>TOTAL:</td>
+                    <td>P1,020</td>
+                </tr>
+            </table>
+        </div>
+        <div class="invoice-notes">
+            <p>Comments, Notes, and Special Instructions:</p>
+        </div>
+    </div>
+</body>
+</html>

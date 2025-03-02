@@ -1,0 +1,274 @@
+/* Reset some defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+}
+
+/* Main wrapper */
+#wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Left panel (keeping as is, but with minor adjustments) */
+#left_panel {
+    width: 220px;
+    background-color: #0085AA;
+    padding: 20px 0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+#logo {
+    width: 80%;
+    margin: 0 auto 30px;
+    display: block;
+}
+
+#left_panel label {
+    padding: 10px 20px;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+#left_panel label:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#left_panel a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#left_panel img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Right panel */
+#right_panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header section */
+#header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+}
+
+#info {
+    margin-right: 15px;
+    text-align: right;
+}
+
+#fullname {
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+#status {
+    color: #777;
+    font-size: 0.9em;
+}
+
+#profile_icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Content area */
+#content {
+    flex: 1;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+/* Header image */
+.imgheader {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background-color: #0085AA;
+}
+
+.imgheader img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Title styling */
+#content h1 {
+    font-size: 24px;
+    margin: 20px;
+    color: #e67e22;
+    font-weight: normal;
+}
+
+/* Main dashboard layout */
+.tableandothers {
+    display: flex;
+    padding: 0 20px 20px;
+    gap: 20px;
+}
+
+/* Left column */
+.left_column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Right column */
+.right_column {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Dashboard cards */
+.numbers, .apptstats, .todays_schedule, .treatment_plans_overview, .numberkpis {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Statistics cards */
+.apptstats h2, .todays_schedule h2, .treatment_plans_overview h2 {
+    color: #0085AA;
+    font-size: 18px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* Current/Total patients */
+.numbers {
+    display: flex;
+    justify-content: space-around;
+}
+
+.currentpatient {
+    text-align: center;
+}
+
+.currentpatient h2 {
+    font-size: 36px;
+    color: #0085AA;
+    margin-bottom: 5px;
+}
+
+.currentpatient p {
+    color: #777;
+    font-size: 14px;
+}
+
+/* Chart containers */
+.chart-container {
+    height: 200px;
+    width: 100%;
+}
+
+/* Today's schedule */
+.schedule_today {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule_today th, .schedule_today td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.schedule_today th {
+    color: #0085AA;
+    font-weight: normal;
+}
+
+/* Treatment plans table */
+.treatmentplan_table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.treatmentplan_table th, .treatmentplan_table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.treatmentplan_table th {
+    color: #0085AA;
+    font-weight: normal;
+}
+
+/* Bottom right section */
+.bottom_right {
+    display: flex;
+    gap: 20px;
+}
+
+.treatment_plans_overview {
+    flex: 1.5;
+}
+
+.numberkpis {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.upcoming_appt, .total_active_plans {
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.upcoming_appt h3, .total_active_plans h3 {
+    color: #0085AA;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.upcoming_appt p, .total_active_plans p {
+    font-size: 36px;
+    color: #e67e22;
+    font-weight: bold;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+    .tableandothers {
+        flex-direction: column;
+    }
+    
+    .bottom_right {
+        flex-direction: column;
+    }
+}
+
+/* Specific color overrides for donut charts */
+#appointmentChart, #treatmentChart {
+    max-width: 100%;
+    margin: 0 auto;
+}

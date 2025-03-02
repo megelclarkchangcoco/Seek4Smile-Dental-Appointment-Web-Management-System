@@ -1,0 +1,505 @@
+#header_with_selection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding-top: 34px;
+    padding-bottom: 0px;
+    width: 100%;
+
+}
+
+.profile_left {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    justify-content: center;
+    padding-bottom: 22px;
+}
+
+/*Patient Profile connected in Patient CSS*/
+#patient-section {
+    width: 90%;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+#header {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+#profile {
+    display: flex;
+    align-items: center;
+}
+#profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+#profile-info h2 {
+    margin: 0;
+    color: #007bff;
+}
+#tabs {
+    display: flex;
+    margin-top: 10px;
+    border-bottom: 2px solid #ddd;
+}
+#tabs a {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #0085AA;
+    
+}
+#tabs .active {
+    border-bottom: 3px solid #0085AA;
+    font-weight: bold;
+}
+
+
+
+
+/*Patient Profile connected in Patient CSS*/
+
+
+.profile-info {
+display: flex;
+}
+
+.profile {
+display: flex;
+
+}
+
+.name h2 {
+font-weight: bold;
+font-size: 48px;
+color: #0085AA;
+margin-top: -10px;
+padding-bottom: 10px;
+}
+
+.name p {
+font-size: 14px;
+color: #222;
+margin-top: 5px;
+}
+
+#profile-pic_patientpage {
+height: 163px;
+width: 163px;
+}
+
+.age_container, .birthday_container, .sex_container {
+display: flex;
+align-items: flex-start;
+
+}
+
+.profile-info {
+gap: 120px;
+margin-left: 40px;
+}
+
+.profile_info_container {
+gap: 20px;
+}
+
+.details_icon {
+height: 23px;
+}
+
+/*OVERVIEW ==== Patient Profile connected in Patient CSS*/
+
+.allcontent {
+display: flex;
+margin-left: 40px;
+margin-top: 25px;
+gap: 60px;
+align-items: flex-start;
+}
+
+.stats_container {
+width: 809px;
+height: 151px;
+border: 0.5px solid #35C3A3;
+box-shadow: 0 4px 8px rgba(136, 186, 255, 0.2);
+}
+
+.medical_history_container h3, .allergies_container h3, .medications_container h3, 
+.recentvisit_container h3, .file_header h3 {
+color:#0085AA;
+font-size: 32px;
+}
+
+.medical_history_table {
+width: 809px;
+}
+
+.medical_history_table th {
+background-color:#35C3A3;
+color: #fff;
+}
+
+.medical_history_table td{
+color: #222;
+font-size: 14px;
+
+}
+
+.medical_history_table th , .medical_history_table  td {
+padding: 12px 10px; /* Padding for the content */
+}
+
+.medical_history_table , .medical_history_table  th, .medical_history_table td {
+border: 1px solid #0085AA;
+border-collapse: collapse;
+}
+
+
+.p_styled {
+width: auto;
+display: inline-block;
+color:#0085AA;
+background-color:rgba(239, 248, 255, 0.9);
+padding: 10px 7px;
+border-radius: 14px;
+border: solid 1px #0085AA;  
+
+}
+
+.allergies_medications_container {
+display: flex;
+gap: 20px;
+}
+
+.allergies_container, .medications_container {
+justify-content: space-around;
+}
+
+.visit_container {
+display: flex;
+border: 0.3px solid #35C3A3;
+box-shadow: 0 4px 8px rgba(136, 186, 255, 0.2);
+width: 500px;
+
+}
+
+.file_header {
+display: flex;
+gap: 120px;
+align-items: center;
+}
+
+.doctor_name {
+font-size: 19px;
+
+}
+
+.specialization {
+font-style: italic;
+font-size: 13px;
+}
+
+.file_name {
+text-decoration: underline;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.upload {
+background-color: #0085AA;
+color: #fff;
+border-radius: 50px;
+border: none;
+display: flex; /* Enables flexbox */
+align-items: center; /* Centers items vertically */
+justify-content: center; /* Centers items horizontally */
+gap: 8px; /* Adds spacing between the image and text */
+padding: 8px 16px; /* Adds some padding for spacing */
+font-weight: bold;
+height: 40px;
+cursor: pointer;
+}
+
+.visit_container {
+display: flex;
+gap: 50px;
+padding: 10px 15px;
+}
+
+.date_visit, .time_visit {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+/*PERSONAL DATA ==== Patient Profile connected in Patient CSS*/
+.personal-content h3 {
+font-size: 32px;
+color: #0085AA;
+}
+
+
+.nameline, .other_info_line, .address_container{
+display: flex;
+gap: 40px;
+}
+
+.division {
+display: flex;
+gap: 100px;
+}
+
+.firstname_container, .middlename_container, .last_name_container, .sex_title_container, .age_title_container, .birthday_title_container
+.house_container, .house_brgy_container, .house_city_container {
+width: 187px;
+}
+
+.h4 {
+color:#0085AA;
+font-weight: bold;
+font-size: 24px;
+}
+
+.gray_styled {
+font-size: 16px;
+color: #A7A7A7;
+
+}
+
+.content_info {
+color: #222;
+font-size: 20px;
+}
+
+.appointment_history_table {
+width: 1442px;
+margin-top: 42px;
+}
+
+.appointment_history_table th {
+background-color:#35C3A3;
+color: #fff;
+}
+
+.appointment_history_table td{
+color: #222;
+font-size: 14px;
+
+}
+
+.appointment_history_table th , .appointment_history_table  td {
+padding: 12px 10px; /* Padding for the content */
+}
+
+.appointment_history_table , .appointment_history_table  th, .appointment_history_table td {
+border: 1px solid #0085AA;
+border-collapse: collapse;
+}
+
+
+.payment_status_pending {
+width: auto; 
+background-color: rgb(255, 138, 69, 0.5);
+color: #0085AA;
+padding: 5px;
+border-radius: 10px;
+display: inline;
+
+}
+
+.appointment_status_upcoming {
+width: auto; 
+background-color: rgb(255, 138, 69, 0.5);
+color: #0085AA;
+padding: 5px;
+border-radius: 10px;
+font-weight: bold;
+display: inline;
+
+}
+
+/*DENTAL HISTORY ==== Patient Profile connected in Patient CSS*/
+
+.columns_treatment, .column2treatment, .list_of_stage, .update_container {
+display: flex;
+justify-content: space-between;
+padding-left: 20px;
+padding-right: 20px;
+}
+
+.list_of_stage {
+gap: 10px;
+}
+
+
+.treatment_plan_container h3,  .past_treatments h3, .current_dentalcondition_container h3 {
+margin-left: 25px;
+padding-top: 20px;
+}
+
+.treatment_plan_container, .current_dentalcondition_container, .past_treatments {
+box-shadow: 0 4px 8px rgba(136, 186, 255, 0.5);
+}
+
+.past_treatments {
+padding-bottom: 25px;
+}
+
+h3 {
+font-weight: bold;
+font-size: 28px;
+color: #0085AA;
+}
+
+.add_btn {
+background-color: #269717;
+cursor: pointer;
+color: #fff;
+border-radius: 15px;
+font-size: 12px;
+padding: 7px 15px;
+outline: none;
+border: none;
+}
+
+.edit_btn {
+outline: none;
+border: none;
+text-decoration: none;
+background-color: #0085AA;
+cursor: pointer;
+color: #fff;
+border-radius: 15px;
+font-size: 12px;
+padding: 7px 15px;
+
+}
+
+.column3treatment {
+height: 115px;
+justify-content: space-between;
+}
+
+
+.past_treatments_table {
+width: 1400px;
+margin-top: 10px;
+margin-left: 25px;
+margin-bottom: 25px;
+padding-bottom: 70px;
+
+}
+
+.past_treatments_table th {
+background-color:#35C3A3;
+color: #fff;
+}
+
+.past_treatments_table td{
+color: #222;
+font-size: 14px;
+
+}
+
+.past_treatments_table th , .past_treatments_table  td {
+padding: 12px 10px; /* Padding for the content */
+}
+
+.past_treatments_table, .past_treatments_table th, .past_treatments_table td {
+border: 1px solid #0085AA;
+border-collapse: collapse;
+}
+
+
+.dentalcondition_columns {
+display: flex;
+margin-left: 25px;
+justify-content: space-between;
+}
+
+.update_container {
+display: flex;
+gap: 10px;
+justify-content: flex-end;
+}
+
+.buttons_container {
+display: flex;
+justify-content: flex-end;
+gap: 10px;
+
+}
+
+.dentalcondition_columns {
+padding-right: 20px;
+}
+
+
+/*LABORATORY RESULTS ==== Patient Profile connected in Patient CSS*/
+
+.big_file_name {
+font-weight: bold;
+font-size: 28px;
+color:#0085AA;
+margin: 0;
+}
+
+.details_container {
+display: flex;
+padding: 30px 30px;
+justify-content: space-between;
+gap:10px;
+align-items: center;
+margin-right: 10px;
+margin-left: 10px;
+}
+
+.block_container {
+box-shadow: 0 4px 8px rgba(136, 186, 255, 0.5);
+margin-top: 25px;
+}
+
+.view_button {
+background-color:#0085AA;
+padding: 15px 10px;
+border: none;
+color: #fff;
+font-weight: bold;
+font-size: 20px;
+width: 180px;
+height: 55px;
+border-radius: 50px;
+cursor: pointer;
+}
+
+.metadata {
+display: flex;
+align-items: center; /* Aligns text and bullet points properly */
+gap: 5px; /* Controls spacing between date, time, and tag */
+flex-wrap: wrap; /* Ensures proper wrapping on smaller screens */
+margin: 0;
+}
+
+.leftside {
+display: flex;
+align-items: center;
+gap: 20px;
+}
+
+.filedeets {
+display: flex;
+flex-direction: column;
+gap:4px;
+}

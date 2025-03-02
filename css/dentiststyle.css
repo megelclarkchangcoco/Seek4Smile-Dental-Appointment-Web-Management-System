@@ -1,0 +1,459 @@
+
+
+/* Prescription Wrapper */
+#prescription-wrapper {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+#prescription-wrapper h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #CD6A30;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Search Bar */
+.prescription-search-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.prescription-search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+
+.prescription-search-input {
+    padding: 12px;
+    padding-left: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 500px;
+    color: #666;
+    font-size: 16px;
+}
+
+.prescription-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.prescription-search-button {
+    padding: 10px 30px;
+    border: none;
+    background-color: #0085AA;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+}
+
+.prescription-search-button:hover {
+    background-color: #006f8e;
+}
+
+
+.add-prescription-button {
+    padding: 10px 30px;
+    border: 2px solid #0085AA;
+    background-color: white;
+    color: #0085AA;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    margin-left: 700px;
+}
+
+.add-prescription-button:hover {
+    background-color: #0085AA;
+    color: white;
+}
+
+
+.add-prescription-icon {
+    margin-right: 8px;
+    width: 18px;
+    height: 18px;
+}
+
+/* Prescription Container */
+.prescription-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    width: 100%;
+    position: relative;
+    margin-top: 20px;
+}
+
+/* Header Styles */
+.prescription-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.medication-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0085AA;
+    margin: 0;
+}
+
+.last-updated {
+    font-size: 13px;
+    color: #6B7280;
+    margin: 0;
+    text-align: right;
+}
+
+.prescription-details {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.prescription-details .column {
+    flex: 1;
+    min-width: 0; 
+}
+
+.prescription-details p {
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+    color: #374151;
+    font-size: 14px;
+}
+
+.prescription-details strong {
+    color: #6B7280;
+    font-weight: 500;
+    margin-right: 8px;
+    display: inline-block;
+    min-width: 100px;
+}
+
+.prescription-details .column p i {
+    color: #374151;
+    font-style: italic;
+}
+
+
+
+.prescription-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.action-button {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+}
+
+.action-button.add {
+    background-color: #22C55E;
+    color: white;
+}
+
+.action-button.add:hover {
+    background-color: #16A34A;
+}
+
+.action-button.edit {
+    background-color: #0EA5E9;
+    color: white;
+}
+
+.action-button.edit:hover {
+    background-color: #0284C7;
+}
+
+.action-button.delete {
+    background-color: #F97316;
+    color: white;
+}
+
+.action-button.delete:hover {
+    background-color: #EA580C;
+}
+
+/*homepage css*/
+
+#content {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+}
+
+.imgheader img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px 8px 0 0;
+}
+
+h1 {
+    font-size: 28px;
+    color: #f5a623;
+    margin: 15px 0;
+    text-align: center;
+}
+
+/* Table and others container */
+.tableandothers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* Left Column */
+.left_column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.numbers {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.currentpatient {
+    text-align: center;
+    width: 48%;
+}
+
+.currentpatient h2 {
+    font-size: 36px;
+    color: #0085aa;
+}
+
+.currentpatient p {
+    font-size: 14px;
+    color: #666;
+}
+
+.apptstats {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.apptstats h2 {
+    font-size: 18px;
+    color: #0085aa;
+    margin-bottom: 10px;
+}
+
+.chart-container {
+    height: 200px; /* Match the size in the image */
+    flex-grow: 1;
+}
+
+/* Right Column */
+.right_column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.todays_schedule {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+.todays_schedule h2 {
+    font-size: 18px;
+    color: #0085aa;
+    margin-bottom: 10px;
+}
+
+.schedule_today {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #e6f0fa;
+}
+
+.schedule_today th,
+.schedule_today td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #fff;
+}
+
+.schedule_today th {
+    background-color: #0085aa;
+    color: #fff;
+    font-weight: bold;
+}
+
+.schedule_today tr:nth-child(even) {
+    background-color: #d9e6f2;
+}
+
+.bottom_right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+.treatment_plans_overview {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.treatment_plans_overview h2 {
+    font-size: 18px;
+    color: #0085aa;
+    margin-bottom: 10px;
+}
+
+.treatmentplan_table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #e6f0fa;
+}
+
+.treatmentplan_table th,
+.treatmentplan_table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #fff;
+}
+
+.treatmentplan_table th {
+    background-color: #0085aa;
+    color: #fff;
+    font-weight: bold;
+}
+
+.numberkpis {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+.upcoming_appt,
+.total_active_plans {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.upcoming_appt h3,
+.total_active_plans h3 {
+    font-size: 16px;
+    color: #0085aa;
+    margin-bottom: 10px;
+}
+
+.upcoming_appt p,
+.total_active_plans p {
+    font-size: 32px;
+    color: #f5a623;
+}
+
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .prescription-container {
+        padding: 16px;
+    }
+
+    .prescription-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .last-updated {
+        text-align: left;
+    }
+
+    .prescription-details {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .prescription-details .column {
+        width: 100%;
+    }
+
+    .prescription-actions {
+        justify-content: stretch;
+    }
+
+    .action-button {
+        flex: 1;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .prescription-container {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+
+    .action-button {
+        display: none;
+    }
+}

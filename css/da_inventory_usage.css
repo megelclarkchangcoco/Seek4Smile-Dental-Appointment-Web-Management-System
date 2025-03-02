@@ -1,0 +1,37 @@
+* {
+    font-family: Lato;
+}
+
+.usage_table {
+    width: 1530px;
+    margin-left: 35px;
+    margin-top: 40px;
+}
+
+/*Header properties*/
+.usage_table th {
+    color:#FFFFFF;
+    background-color: #35C3A3;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.usage_table th, .usage_table td {
+    padding: 12px 10px; /* Padding for the content */
+}
+
+.usage_table td {
+    font-size: 14px;
+}
+
+/* Center alignment for certain columns */
+
+
+/* Alternating row colors */
+tr:nth-child(even) {  background-color: #f3f4f6;}
+tr:nth-child(odd)  {  background-color: #fff;}
+
+/* Hover effect for the table rows */
+.usage_table tbody tr:hover {
+    background-color: #e9f1ff;
+}
