@@ -209,14 +209,15 @@
                 <h2>Cancel Appointment</h2>
                 <p>Reason for Cancelling</p>
                 <form id="cancelForm">
-                    <label><input type="radio" name="reason" value="personal"> Personal Reasons</label><br>
-                    <label><input type="radio" name="reason" value="transportation"> Transportation Issues</label><br>
-                    <label><input type="radio" name="reason" value="work"> Work-related Issues</label><br>
-                    <label><input type="radio" name="reason" value="change_of_mind"> Change of Mind</label><br>
-                    <textarea id="otherReason" placeholder="Add another reason..."></textarea><br>
+                    <label><input type="radio" name="reason" value="personal"> Personal Reasons</label>
+                    <label><input type="radio" name="reason" value="transportation"> Transportation Issues</label>
+                    <label><input type="radio" name="reason" value="work"> Work-related Issues</label>
+                    <label><input type="radio" name="reason" value="change_of_mind"> Change of Mind</label>
+                    <textarea id="otherReason" placeholder="Add another reason..."></textarea>
                     <input type="hidden" id="appointmentID" name="appointmentID">
                     <button type="button" onclick="submitCancel()">CONFIRM</button>
                 </form>
+
             </div>
         </div>
 

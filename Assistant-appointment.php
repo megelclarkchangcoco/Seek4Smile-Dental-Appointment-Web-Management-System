@@ -31,7 +31,7 @@ if (!$result) {
 }
 
 
-// Query for displaying appointment approved list
+// Query for displaying appointment approved or ongoing list (case-insensitive)
 $query2 = "SELECT a.AppointmentID, a.PatientID, COALESCE(p.Firstname, 'Unknown') AS PatientName, 
                  a.PaymentType, COALESCE(ab.PaymentStatus, 'Unpaid') AS PaymentStatus, 
                  a.AppointmentDate, a.TimeStart, a.TimeEnd, a.CreatedAt, 
@@ -41,7 +41,7 @@ $query2 = "SELECT a.AppointmentID, a.PatientID, COALESCE(p.Firstname, 'Unknown')
           LEFT JOIN appointmentbilling ab ON a.AppointmentID = ab.AppointmentID
           LEFT JOIN patient p ON a.PatientID = p.PatientID
           LEFT JOIN dentist d ON a.DentistID = d.DentistID
-          WHERE a.AppointmentStatus = 'Approved'
+          WHERE LOWER(a.AppointmentStatus) IN ('approved', 'ongoing')
           ORDER BY a.CreatedAt DESC";
 
 $result2 = mysqli_query($connection, $query2); 

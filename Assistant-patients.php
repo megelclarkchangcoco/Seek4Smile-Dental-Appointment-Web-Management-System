@@ -271,11 +271,9 @@ if ($selectedPatient) {
                                 ?>
                             </td>
                             <td style="text-align: center; vertical-align: middle;">
-                                <button class="view_btn" style="border: none; background: none; padding: 0;">
-                                    <a href="Assistant-patients.php?view=<?= $patient['PatientID'] ?>">
-                                        <img src="icons/specialist/view.png" alt="View" style="width: 20px; height: 20px;">
-                                    </a>
-                                </button>
+                                <a class="view_btn" href="Assistant-patients.php?view=<?= $patient['PatientID'] ?>">
+                                    <img src="icons/specialist/view.png" alt="View" style="width: 20px; height: 20px;">
+                                </a>
                             </td>
                         </tr>
                         <?php endwhile; ?>
@@ -631,8 +629,7 @@ if ($selectedPatient) {
         </div>
     </div>
     
-    <!-- JS Scripts
-    <script src="js/dental_assistant.js"></script> -->
+    <!-- JS Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Tab switching function exposed globally
@@ -668,22 +665,13 @@ if ($selectedPatient) {
                     if (patientSection) { patientSection.style.display = "none"; }
                 }
             }
+            // Event listener for the close icon to go back to the table view
             document.querySelectorAll(".close").forEach(closeBtn => {
                 closeBtn.addEventListener("click", function (event) {
                     event.stopPropagation();
                     showRightPanelSection("content");
                 });
             });
-            document.querySelectorAll(".view_btn").forEach(viewBtn => {
-                viewBtn.addEventListener("click", function () {
-                    showRightPanelSection("patient-section");
-                });
-            });
-            if (localStorage.getItem("patientSectionVisible") !== "true") {
-                const patientLink = document.querySelector(".sub-navigation a[href='#'][onclick*='patient-section']");
-                if (patientLink) patientLink.style.display = "none";
-                showRightPanelSection("content");
-            }
             window.showRightPanelSection = showRightPanelSection;
         });
         
@@ -727,7 +715,7 @@ if ($selectedPatient) {
             }
         }
 
-        // searching
+        // Searching
         document.getElementById('input-box').addEventListener('keyup', function() {
             const filter = this.value.toLowerCase();
             const rows = document.querySelectorAll('.patient_table tbody tr');
@@ -738,7 +726,6 @@ if ($selectedPatient) {
                 row.style.display = text.indexOf(filter) > -1 ? '' : 'none';
             });
         });
-
     </script>
 </body>
 </html>

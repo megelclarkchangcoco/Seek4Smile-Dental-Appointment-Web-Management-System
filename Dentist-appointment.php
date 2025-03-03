@@ -1,91 +1,115 @@
 <?php 
-    include 'php/connection.php';
-    session_start();
+include 'php/connection.php';
+session_start();
 
-    if(!isset($_SESSION['DentistID'])){
-        header("Location: login.php");
-        exit;
-    }
+if (!isset($_SESSION['DentistID'])) {
+    header("Location: login.php");
+    exit;
+}
 
-    $dentistID = $_SESSION['DentistID'];
-    $firstname = $_SESSION['Firstname'];
-    $lastname = $_SESSION['Lastname'];
-    $profile_img = !empty($_SESSION['img']) ? $_SESSION['img'] : 'img/user_default.png';
+$dentistID   = $_SESSION['DentistID'];
+$firstname   = $_SESSION['Firstname'];
+$lastname    = $_SESSION['Lastname'];
+$profile_img = !empty($_SESSION['img']) ? $_SESSION['img'] : 'img/user_default.png';
 
-    // Query to get approved appointments for the current dentist
-    $query = "SELECT a.AppointmentID, a.PatientID, COALESCE(p.Firstname, 'Unknown') AS PatientName, 
-                     a.AppointmentDate, a.TimeStart, a.TimeEnd, 
-                     a.Reason, a.AppointmentStatus 
-              FROM appointment a
-              LEFT JOIN patient p ON a.PatientID = p.PatientID
-              WHERE a.DentistID = '$dentistID' AND a.AppointmentStatus = 'Approved'
-              ORDER BY a.AppointmentDate, a.TimeStart";
+// Query to get approved or ongoing appointments (case-insensitive) for the current dentist
+$query = "SELECT a.AppointmentID, 
+                 a.PatientID, 
+                 COALESCE(p.Firstname, 'Unknown') AS PatientName, 
+                 a.PaymentType, 
+                 COALESCE(ab.PaymentStatus, 'Unpaid') AS PaymentStatus, 
+                 a.AppointmentDate, 
+                 a.TimeStart, 
+                 a.TimeEnd, 
+                 a.CreatedAt, 
+                 COALESCE(d.Firstname, 'Not Assigned') AS DentistName, 
+                 a.Reason, 
+                 a.AppointmentStatus 
+          FROM appointment a
+          LEFT JOIN appointmentbilling ab ON a.AppointmentID = ab.AppointmentID
+          LEFT JOIN patient p ON a.PatientID = p.PatientID
+          LEFT JOIN dentist d ON a.DentistID = d.DentistID
+          WHERE a.DentistID = '$dentistID'
+            AND LOWER(a.AppointmentStatus) IN ('approved', 'ongoing')
+          ORDER BY a.AppointmentDate, a.TimeStart";
 
-    $result = mysqli_query($connection, $query);
+$result = mysqli_query($connection, $query);
+if (!$result) {
+    die("Error in SQL Query: " . mysqli_error($connection));
+}
 
-    if (!$result) {
-        die("Error in SQL Query: " . mysqli_error($connection));
-    }
+// Store rows in an array for both the HTML table and for FullCalendar
+$approvedAppointments = [];
+$appointments = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $approvedAppointments[] = $row;
+    $appointments[] = [
+        'title'   => htmlspecialchars($row['PatientName'] . ' - ' . $row['Reason']),
+        'start'   => $row['AppointmentDate'] . 'T' . $row['TimeStart'],
+        'patient' => htmlspecialchars($row['PatientName']),
+        'time'    => date('h:i A', strtotime($row['TimeStart'])) . ' - ' . date('h:i A', strtotime($row['TimeEnd'])),
+        'status'  => htmlspecialchars($row['AppointmentStatus']),
+        'reason'  => htmlspecialchars($row['Reason'])
+    ];
+}
 
-    // Fetch appointments into an array for JavaScript
-    $appointments = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $appointments[] = [
-            'title' => htmlspecialchars($row['PatientName'] . ' - ' . $row['Reason']),
-            'start' => $row['AppointmentDate'] . 'T' . $row['TimeStart'],
-            'patient' => htmlspecialchars($row['PatientName']),
-            'time' => date('h:i A', strtotime($row['TimeStart'])) . ' - ' . date('h:i A', strtotime($row['TimeEnd'])),
-            'status' => htmlspecialchars($row['AppointmentStatus']),
-            'reason' => htmlspecialchars($row['Reason'])
-        ];
-    }
+// Query for upcoming approved appointments (within the next 7 days)
+$today = date('Y-m-d');
+$sevenDaysLater = date('Y-m-d', strtotime('+7 days'));
+$upcomingQuery = "SELECT a.AppointmentID, 
+                         COALESCE(p.Firstname, 'Unknown') AS PatientName, 
+                         a.AppointmentDate, 
+                         a.TimeStart, 
+                         a.TimeEnd, 
+                         a.Reason 
+                  FROM appointment a
+                  LEFT JOIN patient p ON a.PatientID = p.PatientID
+                  WHERE a.DentistID = '$dentistID' 
+                    AND a.AppointmentStatus = 'Approved'
+                    AND a.AppointmentDate BETWEEN '$today' AND '$sevenDaysLater'
+                  ORDER BY a.AppointmentDate, a.TimeStart";
 
-    // Query for upcoming approved appointments (within the next 7 days, for example)
-    $today = date('Y-m-d');
-    $sevenDaysLater = date('Y-m-d', strtotime('+7 days'));
-    $upcomingQuery = "SELECT a.AppointmentID, COALESCE(p.Firstname, 'Unknown') AS PatientName, 
-                             a.AppointmentDate, a.TimeStart, a.TimeEnd, a.Reason 
-                      FROM appointment a
-                      LEFT JOIN patient p ON a.PatientID = p.PatientID
-                      WHERE a.DentistID = '$dentistID' AND a.AppointmentStatus = 'Approved'
-                      AND a.AppointmentDate BETWEEN '$today' AND '$sevenDaysLater'
-                      ORDER BY a.AppointmentDate, a.TimeStart";
+$upcomingResult = mysqli_query($connection, $upcomingQuery);
+if (!$upcomingResult) {
+    die("Error in SQL Query for upcoming appointments: " . mysqli_error($connection));
+}
 
-    $upcomingResult = mysqli_query($connection, $upcomingQuery);
+$upcomingAppointments = [];
+while ($row = mysqli_fetch_assoc($upcomingResult)) {
+    $upcomingAppointments[] = [
+        'date'    => date('Y-m-d', strtotime($row['AppointmentDate'])),
+        'day'     => date('D', strtotime($row['AppointmentDate'])),
+        'time'    => date('h:i A', strtotime($row['TimeStart'])) . ' - ' . date('h:i A', strtotime($row['TimeEnd'])),
+        'patient' => htmlspecialchars($row['PatientName']),
+        'reason'  => htmlspecialchars($row['Reason'])
+    ];
+}
 
-    if (!$upcomingResult) {
-        die("Error in SQL Query for upcoming appointments: " . mysqli_error($connection));
-    }
+// Query to get completed appointments for the current dentist
+$completedAppointmentsQuery = "SELECT a.AppointmentID, 
+                                      a.PatientID, 
+                                      COALESCE(p.Firstname, 'Unknown') AS PatientName, 
+                                      a.PaymentType, 
+                                      COALESCE(ab.PaymentStatus, 'Unpaid') AS PaymentStatus, 
+                                      a.AppointmentDate, 
+                                      a.TimeStart, 
+                                      a.TimeEnd, 
+                                      a.CreatedAt, 
+                                      COALESCE(d.Firstname, 'Not Assigned') AS DentistName, 
+                                      a.Reason, 
+                                      a.AppointmentStatus 
+                               FROM appointment a
+                               LEFT JOIN appointmentbilling ab ON a.AppointmentID = ab.AppointmentID
+                               LEFT JOIN patient p ON a.PatientID = p.PatientID
+                               LEFT JOIN dentist d ON a.DentistID = d.DentistID
+                               WHERE a.DentistID = '$dentistID' 
+                                 AND a.AppointmentStatus = 'Completed'
+                               ORDER BY a.CreatedAt DESC";
 
-    $upcomingAppointments = [];
-    while ($row = mysqli_fetch_assoc($upcomingResult)) {
-        $upcomingAppointments[] = [
-            'date' => date('Y-m-d', strtotime($row['AppointmentDate'])),
-            'day' => date('D', strtotime($row['AppointmentDate'])),
-            'time' => date('h:i A', strtotime($row['TimeStart'])) . ' - ' . date('h:i A', strtotime($row['TimeEnd'])),
-            'patient' => htmlspecialchars($row['PatientName']),
-            'reason' => htmlspecialchars($row['Reason'])
-        ];
-    }
-
-    // Query to get completed appointments for the current dentist
-    $completedAppointmentsQuery = "SELECT a.AppointmentID, a.PatientID, COALESCE(p.Firstname, 'Unknown') AS PatientName, 
-                                        a.PaymentType, COALESCE(ab.PaymentStatus, 'Unpaid') AS PaymentStatus, 
-                                        a.AppointmentDate, a.TimeStart, a.TimeEnd, a.CreatedAt, 
-                                        COALESCE(d.Firstname, 'Not Assigned') AS DentistName, 
-                                        a.Reason, a.AppointmentStatus 
-                                    FROM appointment a
-                                    LEFT JOIN appointmentbilling ab ON a.AppointmentID = ab.AppointmentID
-                                    LEFT JOIN patient p ON a.PatientID = p.PatientID
-                                    LEFT JOIN dentist d ON a.DentistID = d.DentistID
-                                    WHERE a.DentistID = '$dentistID' AND a.AppointmentStatus = 'Completed'
-                                    ORDER BY a.CreatedAt DESC";
-
-    $completedAppointmentsResult = mysqli_query($connection, $completedAppointmentsQuery);
-
-    if (!$completedAppointmentsResult) {
-        die("Error in SQL Query: " . mysqli_error($connection));
-    }
+$completedAppointmentsResult = mysqli_query($connection, $completedAppointmentsQuery);
+if (!$completedAppointmentsResult) {
+    die("Error in SQL Query: " . mysqli_error($connection));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -97,13 +121,11 @@
     <link rel="stylesheet" href="css/da_appointment_listview.css">
     <link rel="stylesheet" href="css/da_appointment_calendarview.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <!--JS calendar-->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
-    <!-- FullCalendar CSS -->
+    <!-- FullCalendar CSS and JS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/main.min.css">
-    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.8/main.min.js"></script>
-    <!-- Load jQuery once -->
+    <!-- Load jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Dental Assistant - Appointments</title>
     <link rel="icon" type="image/x-icon" href="icons/patient/toothlogos.png">
@@ -111,7 +133,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <style>
-        /* Your existing styles remain unchanged */
         #header_with_selection {
             display: flex;
             align-items: center;
@@ -120,7 +141,7 @@
             background-color: white;
             border-bottom: 1px solid #e0e0e0;
             padding-top: 34px;
-            padding-bottom: 0px;
+            padding-bottom: 0;
             width: 100%;
         }
         .profile_left {
@@ -136,30 +157,13 @@
             background: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        #header {
+        #header, #tabs {
             display: flex;
             align-items: center;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
-        #profile {
-            display: flex;
-            align-items: center;
-        }
-        #profile-pic {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-        #profile-info h2 {
-            margin: 0;
-            color: #007bff;
         }
         #tabs {
-            display: flex;
             margin-top: 10px;
             border-bottom: 2px solid #ddd;
         }
@@ -188,7 +192,7 @@
             background: #fff;
             border-radius: 8px;
             padding: 15px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             height: 800px;
         }
         #right_appointment_panel {
@@ -201,16 +205,14 @@
             right: 30px;
             margin-right: 10px;
         }
-        #appointment_overview,
-        #upcoming_appointments {
-            background: #ffffff;
+        #appointment_overview, #upcoming_appointments {
+            background: #fff;
             padding: 12px;
             border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             width: 100%;
         }
-        #appointment_overview h2,
-        #upcoming_appointments h2 {
+        #appointment_overview h2, #upcoming_appointments h2 {
             font-size: 18px;
             color: #007bff;
             border-bottom: 2px solid #007bff;
@@ -234,63 +236,28 @@
             border-radius: 5px;
             font-size: 14px;
             text-align: center;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body> 
-
-    <!-- main div -->   
+    <!-- Main Wrapper -->
     <div id="wrapper">
-
-        <!-- Left panel -->
+        <!-- Left Panel -->
         <div id="left_panel">
             <img id="logo" src="icons/dentalassistant/logo_seek4smiles.png" alt="Logo">
-            <label>
-                <a href="Dentist-homepage.php">
-                    <img src="icons/dentalassistant/home_icon.png" alt="Dashboard"> Dashboard
-                </a>
-            </label>
-            <label>
-                <a href="Dentist-notification.php">
-                    <img src="icons/dentalassistant/notif_icon.png" alt="Notifications"> Notifications
-                </a>
-            </label>
-            <label>
-                <a href="Dentist-patient.php">
-                    <img src="icons/dentalassistant/patient_icon.png" alt="Patients"> Patients
-                </a>
-            </label>
-            <label>
-                <a href="Dentist-perscription.php">
-                    <img src="icons/patient/prescription.png" alt="Prescription"> Prescription
-                </a>
-            </label>
-            <label>
-                <a href="Dentist-appointment.php">
-                    <img src="icons/dentist/calendar_icon.png" alt="Calendar"> Calendar
-                </a> 
-            </label>
-            <label>
-                <a href="Dentist-message.php">
-                    <img src="icons/patient/message_icon.png" alt="Messages"> Messages
-                </a> 
-            </label>
-            <label>
-                <a href="Dentist-profile.php">
-                    <img src="icons/dentist/profile_icon.png" alt="Profile"> Profile
-                </a> 
-            </label>
-            <label>
-                <a href="logout.php">
-                    <img src="icons/dentalassistant/signout_icon.png" alt="Sign Out"> Sign Out
-                </a>
-            </label>
+            <label><a href="Dentist-homepage.php"><img src="icons/dentalassistant/home_icon.png" alt="Dashboard"> Dashboard</a></label>
+            <label><a href="Dentist-notification.php"><img src="icons/dentalassistant/notif_icon.png" alt="Notifications"> Notifications</a></label>
+            <label><a href="Dentist-patient.php"><img src="icons/dentalassistant/patient_icon.png" alt="Patients"> Patients</a></label>
+            <label><a href="Dentist-perscription.php"><img src="icons/patient/prescription.png" alt="Prescription"> Prescription</a></label>
+            <label><a href="Dentist-appointment.php"><img src="icons/dentist/calendar_icon.png" alt="Calendar"> Calendar</a></label>
+            <label><a href="Dentist-message.php"><img src="icons/patient/message_icon.png" alt="Messages"> Messages</a></label>
+            <label><a href="Dentist-profile.php"><img src="icons/dentist/profile_icon.png" alt="Profile"> Profile</a></label>
+            <label><a href="logout.php"><img src="icons/dentalassistant/signout_icon.png" alt="Sign Out"> Sign Out</a></label>
         </div>
-
-        <!-- Right panel -->
+        <!-- Right Panel -->
         <div id="right_panel">
-            <!-- Header with section links -->
+            <!-- Header with Section Links -->
             <div id="header_with_selection">
                 <div class="sub-navigation" style="margin-left: 20px;">
                     <a href="#" onclick="showRightPanelSection('calendar_view_section')">Calendar View</a>
@@ -299,13 +266,12 @@
                 </div>
                 <div class="profile_left">
                     <div id="info">
-                        <p id="fullname">Dr. <?php echo htmlspecialchars($firstname  . ' ' . $lastname);?></p>
+                        <p id="fullname">Dr. <?php echo htmlspecialchars($firstname . ' ' . $lastname); ?></p>
                         <p id="status">Dentist</p>
                     </div>
                     <img id="profile_icon" src="<?php echo htmlspecialchars($profile_img, ENT_QUOTES, 'UTF-8'); ?>" alt="Profile Icon">
                 </div>
             </div>
-
             <!-- Request Section -->
             <div id="request_section" class="section">
                 <div class="main_content">
@@ -335,8 +301,8 @@
                         </thead>
                         <tbody>
                             <?php 
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($row = mysqli_fetch_assoc($result)) {
+                            if (count($approvedAppointments) > 0) {
+                                foreach ($approvedAppointments as $row) {
                                     $appointmentID = htmlspecialchars($row['AppointmentID']);
                                     ?>
                                     <tr id="row_<?php echo $appointmentID; ?>">
@@ -353,14 +319,13 @@
                                     <?php
                                 }
                             } else {
-                                echo '<tr><td colspan="10" style="text-align:center;">No approved appointments found.</td></tr>';
+                                echo '<tr><td colspan="9" style="text-align:center;">No approved appointments found.</td></tr>';
                             }
                             ?>
                         </tbody>
                     </table>
                 </div>
             </div>
-
             <!-- Calendar View Section -->
             <div id="calendar_view_section" class="section">
                 <div id="calendar"></div>
@@ -393,7 +358,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- List View Section -->
             <div id="list_view_section" class="section">
                 <div class="main_content">
@@ -448,7 +412,7 @@
                                     <?php
                                 }
                             } else {
-                                echo '<tr><td colspan="11" style="text-align:center;">No completed appointments found.</td></tr>';
+                                echo '<tr><td colspan="10" style="text-align:center;">No completed appointments found.</td></tr>';
                             }
                             ?>
                         </tbody>
@@ -457,37 +421,25 @@
             </div>
         </div>
     </div>
-
-    <!-- Navigation switching script -->
+    <!-- Navigation Switching Script -->
     <script>
         function showRightPanelSection(sectionId) {
-            // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
                 section.style.display = 'none';
             });
-
-            // Show the selected section
             const selectedSection = document.getElementById(sectionId);
             if (selectedSection) {
                 selectedSection.style.display = 'block';
             }
-
-            // Update active state for navigation links
             document.querySelectorAll('.sub-navigation a').forEach(link => {
                 link.classList.remove('active');
             });
-
-            // Highlight the clicked link
             const clickedLink = document.querySelector(`[onclick="showRightPanelSection('${sectionId}')"]`);
             if (clickedLink) {
                 clickedLink.classList.add('active');
             }
-
-            // Maintain proper alignment
             document.querySelector("#right_panel").style.justifyContent = "flex-start";
         }
-
-        // Initialize on page load
         window.onload = function () {
             document.querySelectorAll('.section').forEach(section => {
                 section.style.display = 'none';
@@ -502,20 +454,17 @@
             }
         };
     </script>
-
-    <!-- Search script for Request Section -->
+    <!-- Search Script for Request Section -->
     <script>
         $(document).ready(function () {
             $("#input-box-request").on("keyup", function () {
                 var searchValue = $(this).val().toLowerCase();
-                
                 $("table.appointment-requests tbody tr").each(function () {
                     var appointmentID = $(this).find("td:eq(0)").text().toLowerCase();
-                    var patientName = $(this).find("td:eq(1)").text().toLowerCase();
+                    var patientName   = $(this).find("td:eq(1)").text().toLowerCase();
                     var paymentStatus = $(this).find("td:eq(3)").text().toLowerCase();
-                    var dentistName = $(this).find("td:eq(7)").text().toLowerCase();
-                    var reason = $(this).find("td:eq(8)").text().toLowerCase();
-
+                    var dentistName   = $(this).find("td:eq(7)").text().toLowerCase();
+                    var reason        = $(this).find("td:eq(8)").text().toLowerCase();
                     if (
                         appointmentID.includes(searchValue) || 
                         patientName.includes(searchValue) || 
@@ -529,17 +478,14 @@
                     }
                 });
             });
-
             $("#search_btn").click(function () {
                 var searchValue = $("#input-box-request").val().toLowerCase();
-                
                 $("table.appointment-requests tbody tr").each(function () {
                     var appointmentID = $(this).find("td:eq(0)").text().toLowerCase();
-                    var patientName = $(this).find("td:eq(1)").text().toLowerCase();
+                    var patientName   = $(this).find("td:eq(1)").text().toLowerCase();
                     var paymentStatus = $(this).find("td:eq(3)").text().toLowerCase();
-                    var dentistName = $(this).find("td:eq(7)").text().toLowerCase();
-                    var reason = $(this).find("td:eq(8)").text().toLowerCase();
-
+                    var dentistName   = $(this).find("td:eq(7)").text().toLowerCase();
+                    var reason        = $(this).find("td:eq(8)").text().toLowerCase();
                     if (
                         appointmentID.includes(searchValue) || 
                         patientName.includes(searchValue) || 
@@ -555,22 +501,18 @@
             });
         });
     </script>
-
-    <!-- Search script for List View Section -->
+    <!-- Search Script for List View Section -->
     <script>
         $(document).ready(function () {
             function performSearch(searchValue) {
                 searchValue = searchValue.toLowerCase();
-                
                 $("table.appointments-table tbody tr").each(function () {
                     var appointmentID = $(this).data('patient-id') ? $(this).data('patient-id').toLowerCase() : '';
-                    var patientName = $(this).data('patient-name') ? $(this).data('patient-name').toLowerCase() : '';
+                    var patientName   = $(this).data('patient-name') ? $(this).data('patient-name').toLowerCase() : '';
                     var paymentStatus = $(this).data('payment-status') ? $(this).data('payment-status').toLowerCase() : '';
-                    var dentistName = $(this).data('dentist-name') ? $(this).data('dentist-name').toLowerCase() : '';
-                    var reason = $(this).data('reason') ? $(this).data('reason').toLowerCase() : '';
-
-                    var cellText = $(this).text().toLowerCase().replace(/<[^>]+>/g, '');
-
+                    var dentistName   = $(this).data('dentist-name') ? $(this).data('dentist-name').toLowerCase() : '';
+                    var reason        = $(this).data('reason') ? $(this).data('reason').toLowerCase() : '';
+                    var cellText      = $(this).text().toLowerCase().replace(/<[^>]+>/g, '');
                     if (
                         appointmentID.includes(searchValue) || 
                         patientName.includes(searchValue) || 
@@ -585,19 +527,16 @@
                     }
                 });
             }
-
             $("#input-box-list").on("keyup", function () {
                 var searchValue = $(this).val();
                 performSearch(searchValue);
             });
-
             $("#search_btn").click(function () {
                 var searchValue = $("#input-box-list").val();
                 performSearch(searchValue);
             });
         });
     </script>
-
     <!-- FullCalendar Initialization -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {

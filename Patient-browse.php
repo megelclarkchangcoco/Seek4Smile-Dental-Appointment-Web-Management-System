@@ -11,7 +11,6 @@
     $lastname = $_SESSION['Lastname'];
     $profile_img = !empty($_SESSION['img']) ? $_SESSION['img'] : 'img/user_default.png';
 
-
     // Fetch all dentists with their working hours
     $query = "
     SELECT d.DentistID, d.Firstname, d.Middlename, d.Lastname, d.Email, d.img, d.Specialization, d.Description, d.YearExperience,
@@ -21,9 +20,8 @@
     ";
     $result = mysqli_query($connection, $query);
 
-    // Check if the query was successful
     if (!$result) {
-        die("Query Failed: " . mysqli_error($connection)); // Display SQL error message
+        die("Query Failed: " . mysqli_error($connection));
     }
     
     // Fetch dentists
@@ -70,61 +68,22 @@
 <body> 
     <!-- main div -->   
     <div id="wrapper">
-
         <!-- this the left panel located-->
         <div id="left_panel">
-            <img id="logo" src="icons/patient/logo_seek4smiles.png" alt="Logo"> <!-- Add your logo image path -->
-        
-            <label>
-                <a href="Patient-Homepage.php">
-                    <img src="icons/patient/home_icon.png" alt="Home"> Homepage
-                </a>
-            </label>
-            <label>
-                <a href="Patient-notification.php">
-                    <img src="icons/patient/notification_icon.png" alt="Notifications"> Notifications
-                </a>
-            </label>
-            <label>
-                <a href="Patient-record.php">
-                    <img src="icons/patient/medical_record_icon.png" alt="Medical Records"> Medical Records
-                </a>
-            </label>
-            <label>
-                <a href="Patient-prescription.php">
-                    <img src="icons/patient/prescription.png" alt="Medical Records"> Prescription Records
-                </a>
-            </label>
-            <label>
-                <a href="Patient-appointment.php">
-                    <img src="icons/patient/calendar_icon.png" alt="Appointments"> Appointments
-                </a>
-            </label>
-            <label>
-                <a href="Patient-message.php">
-                    <img src="icons/patient/message_icon.png" alt="Messages"> Messages
-                </a>
-            </label>
-            <label>
-                <a href="Patient-billing.php">
-                    <img src="icons/patient/billing_icons.png" alt="Billing"> Billing
-                </a>
-            </label>
-            <label>
-                <a href="Patient-profile.php">
-                    <img src="icons/patient/profile_icon.png" alt="Profile"> Profile
-                </a>
-            </label>
-            <label>
-                <a href="logout.php">
-                    <img src="icons/patient/signout_icon.png" alt="Sign Out"> Sign Out
-                </a>
-            </label>
+            <img id="logo" src="icons/patient/logo_seek4smiles.png" alt="Logo">
+            <label><a href="Patient-Homepage.php"><img src="icons/patient/home_icon.png" alt="Home"> Homepage</a></label>
+            <label><a href="Patient-notification.php"><img src="icons/patient/notification_icon.png" alt="Notifications"> Notifications</a></label>
+            <label><a href="Patient-record.php"><img src="icons/patient/medical_record_icon.png" alt="Medical Records"> Medical Records</a></label>
+            <label><a href="Patient-prescription.php"><img src="icons/patient/prescription.png" alt="Medical Records"> Prescription Records</a></label>
+            <label><a href="Patient-appointment.php"><img src="icons/patient/calendar_icon.png" alt="Appointments"> Appointments</a></label>
+            <label><a href="Patient-message.php"><img src="icons/patient/message_icon.png" alt="Messages"> Messages</a></label>
+            <label><a href="Patient-billing.php"><img src="icons/patient/billing_icons.png" alt="Billing"> Billing</a></label>
+            <label><a href="Patient-profile.php"><img src="icons/patient/profile_icon.png" alt="Profile"> Profile</a></label>
+            <label><a href="logout.php"><img src="icons/patient/signout_icon.png" alt="Sign Out"> Sign Out</a></label>
         </div>
 
-        <!-- this div where the rigth panel located and the other feature-->
+        <!-- this div where the right panel located and the other feature-->
         <div id="right_panel">
-
             <!--this for header where the profile icon located----->
             <div id="header">
                 <div id="info" style="text-align: left;">
@@ -135,7 +94,7 @@
             </div>
 
             <div class="message-p">
-                <p>Good Day, Juan</p>
+                <p>Good Day, <?php echo htmlspecialchars($firstname)?></p>
             </div>
 
             <div class="slogan-container">
@@ -150,7 +109,7 @@
             </div>
             
             <div class="search-by">
-                <p>Seacrh by</p>
+                <p>Search by</p>
                 <label class="label">Provider</label>
                 <label class="label">Specialization</label>
             </div>
@@ -203,7 +162,7 @@
         <!-- Doctor Modal--->
         <div id="doctorModal" class="modal-doctor" style="display: none;">
             <div class="modal-content-doctor">
-                <span class="close-btn">&times;</span>
+                <span class="close-btn">×</span>
                 
                 <div class="doctor-header">
                     <img src="" alt="Doctor Image" class="doctor-image-content">
@@ -233,7 +192,6 @@
             </div>
         </div>
 
-
         <!-- Appointment Booking Modal -->
         <div id="appointmentModal" class="modal" style="display: none;">
             <div class="modal-content appointment-form">
@@ -241,7 +199,7 @@
                     <button class="back-btn" onclick="backToDoctorModal()">
                         <span class="back-arrow">←</span> Back
                     </button>
-                    <span class="close-btn" onclick="closeAppointmentModal()">&times;</span>
+                    <span class="close-btn" onclick="closeAppointmentModal()">×</span>
                 </div>
                 <form id="appointmentForm">
                     <div class="form-group">
@@ -263,7 +221,6 @@
                     </div>
 
                     <!-- Appointment Type -->
-                    <!-- Appointment Type -->
                     <div class="form-group">
                         <label for="appointmentType">Appointment Type:</label>
                         <select id="appointmentType" name="appointmentType" required onchange="showRelevantFields()">
@@ -275,7 +232,6 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-
 
                     <!-- Laboratory Type -->
                     <div class="form-group" id="appointmentLaboratoryGroup" style="display: none;">
@@ -353,7 +309,6 @@
 
                     <button type="submit" class="book-btn">Book Appointment</button>
                 </form>
-
             </div>
         </div>
 
@@ -384,137 +339,129 @@
             // Handle book appointment button click
             const bookBtn = document.querySelector('.book-btn');
             bookBtn.addEventListener('click', () => {
-                // Add your booking logic here
                 console.log('Booking appointment...');
             });
-            
         </script>
 
-    <script>
-        // Get modal elements
-        const doctorModal = document.getElementById('doctorModal');
-        const appointmentModal = document.getElementById('appointmentModal');
-        const doctorCloseBtn = doctorModal.querySelector('.close-btn');
-        
-        // Open doctor modal when clicking on browse wrapper
-        browseWrapper.addEventListener('click', (e) => {
-            e.preventDefault();
-            doctorModal.style.display = 'flex';
-        });
-        
-        // Close doctor modal when clicking close button
-        doctorCloseBtn.addEventListener('click', () => {
-            doctorModal.style.display = 'none';
-        });
-        
-        // Function to open appointment modal
-        function openAppointmentModal() {
-            doctorModal.style.display = 'none';
-            appointmentModal.style.display = 'flex';
+        <script>
+            // Get modal elements
+            const doctorModal = document.getElementById('doctorModal');
+            const appointmentModal = document.getElementById('appointmentModal');
+            const doctorCloseBtn = doctorModal.querySelector('.close-btn');
             
-            // Set min date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('appointmentDate').min = today;
-        }
-        
-        // Function to close appointment modal
-        function closeAppointmentModal() {
-            appointmentModal.style.display = 'none';
-            doctorModal.style.display = 'flex';
-        }
-        
-        
-        // Close modals when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === doctorModal) {
+            // Open doctor modal when clicking on browse wrapper
+            browseWrapper.addEventListener('click', (e) => {
+                e.preventDefault();
+                doctorModal.style.display = 'flex';
+            });
+            
+            // Close doctor modal when clicking close button
+            doctorCloseBtn.addEventListener('click', () => {
                 doctorModal.style.display = 'none';
-            }
-            if (e.target === appointmentModal) {
-                appointmentModal.style.display = 'none';
-            }
-        });
-        
-        // Validate time end is after time start
-        document.getElementById('timeEnd').addEventListener('change', function() {
-            const timeStart = document.getElementById('timeStart').value;
-            const timeEnd = this.value;
+            });
             
-            if (timeStart && timeEnd && timeEnd <= timeStart) {
-                alert('End time must be after start time');
-                this.value = '';
+            // Function to open appointment modal
+            function openAppointmentModal() {
+                doctorModal.style.display = 'none';
+                appointmentModal.style.display = 'flex';
+                
+                // Set min date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('appointmentDate').min = today;
             }
-        });
+            
+            // Function to close appointment modal
+            function closeAppointmentModal() {
+                appointmentModal.style.display = 'none';
+                doctorModal.style.display = 'flex';
+            }
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === doctorModal) {
+                    doctorModal.style.display = 'none';
+                }
+                if (e.target === appointmentModal) {
+                    appointmentModal.style.display = 'none';
+                }
+            });
+            
+            // Validate time end is after time start
+            document.getElementById('timeEnd').addEventListener('change', function() {
+                const timeStart = document.getElementById('timeStart').value;
+                const timeEnd = this.value;
+                
+                if (timeStart && timeEnd && timeEnd <= timeStart) {
+                    alert('End time must be after start time');
+                    this.value = '';
+                }
+            });
 
-        function backToDoctorModal() {
-            appointmentModal.style.display = 'none';
-            doctorModal.style.display = 'flex';
-        }
+            function backToDoctorModal() {
+                appointmentModal.style.display = 'none';
+                doctorModal.style.display = 'flex';
+            }
         </script>
 
         <!--script for display data from browse-wrapper to doctorModal-->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-            const modal = document.getElementById("doctorModal");
-            const closeModal = document.querySelector(".close-btn");
+                const modal = document.getElementById("doctorModal");
+                const closeModal = document.querySelector(".close-btn");
 
-            // Select all dentist links
-            document.querySelectorAll(".open-modal").forEach(item => {
-                item.addEventListener("click", function (event) {
-                    event.preventDefault(); // Prevent default link behavior
+                // Select all dentist links
+                document.querySelectorAll(".open-modal").forEach(item => {
+                    item.addEventListener("click", function (event) {
+                        event.preventDefault(); // Prevent default link behavior
 
-                    // Get dentist data from clicked element
-                    const fullName = `Dr. ${this.dataset.firstname} ${this.dataset.middlename} ${this.dataset.lastname}`;
-                    const imgSrc = this.dataset.img;
-                    const specialization = this.dataset.specialization;
-                    const description = this.dataset.description;
-                    const email = this.dataset.email;
-                    const experience = this.dataset.yearExperience;
+                        // Get dentist data from clicked element
+                        const fullName = `Dr. ${this.dataset.firstname} ${this.dataset.middlename} ${this.dataset.lastname}`;
+                        const imgSrc = this.dataset.img;
+                        const specialization = this.dataset.specialization;
+                        const description = this.dataset.description;
+                        const email = this.dataset.email;
+                        const experience = this.dataset.yearExperience;
 
-                    // Populate modal
-                    document.querySelector(".doctor-image-content").src = imgSrc;
-                    document.querySelector(".doctor-info h2").innerText = fullName;
-                    document.querySelector(".specialty").innerText = specialization;
-                    document.querySelector(".doctor-description p").innerText = description;
-                    document.querySelector(".contact-info a").innerText = email;
-                    document.querySelector(".contact-info a").href = `mailto:${email}`;
+                        // Populate modal
+                        document.querySelector(".doctor-image-content").src = imgSrc;
+                        document.querySelector(".doctor-info h2").innerText = fullName;
+                        document.querySelector(".specialty").innerText = specialization;
+                        document.querySelector(".doctor-description p").innerText = description;
+                        document.querySelector(".contact-info a").innerText = email;
+                        document.querySelector(".contact-info a").href = `mailto:${email}`;
 
-                    // Set working hours dynamically
-                    document.querySelector(".schedule-grid").innerHTML = `
-                        <div class="schedule-item"><h4>MONDAY</h4><div class="time"><span>${this.dataset.monday}</span></div></div>
-                        <div class="schedule-item"><h4>TUESDAY</h4><div class="time"><span>${this.dataset.tuesday}</span></div></div>
-                        <div class="schedule-item"><h4>WEDNESDAY</h4><div class="time"><span>${this.dataset.wednesday}</span></div></div>
-                        <div class="schedule-item"><h4>THURSDAY</h4><div class="time"><span>${this.dataset.thursday}</span></div></div>
-                        <div class="schedule-item"><h4>FRIDAY</h4><div class="time"><span>${this.dataset.friday}</span></div></div>
-                        <div class="schedule-item"><h4>SATURDAY</h4><div class="time"><span>${this.dataset.saturday}</span></div></div>
-                        <div class="schedule-item"><h4>SUNDAY</h4><div class="time"><span>${this.dataset.sunday}</span></div></div>
-                    `;
+                        // Set working hours dynamically
+                        document.querySelector(".schedule-grid").innerHTML = `
+                            <div class="schedule-item"><h4>MONDAY</h4><div class="time"><span>${this.dataset.monday}</span></div></div>
+                            <div class="schedule-item"><h4>TUESDAY</h4><div class="time"><span>${this.dataset.tuesday}</span></div></div>
+                            <div class="schedule-item"><h4>WEDNESDAY</h4><div class="time"><span>${this.dataset.wednesday}</span></div></div>
+                            <div class="schedule-item"><h4>THURSDAY</h4><div class="time"><span>${this.dataset.thursday}</span></div></div>
+                            <div class="schedule-item"><h4>FRIDAY</h4><div class="time"><span>${this.dataset.friday}</span></div></div>
+                            <div class="schedule-item"><h4>SATURDAY</h4><div class="time"><span>${this.dataset.saturday}</span></div></div>
+                            <div class="schedule-item"><h4>SUNDAY</h4><div class="time"><span>${this.dataset.sunday}</span></div></div>
+                        `;
 
-                    // Show modal
-                    modal.style.display = "block";
+                        // Show modal
+                        modal.style.display = "block";
+                    });
+                });
+
+                // Close modal
+                closeModal.addEventListener("click", function () {
+                    modal.style.display = "none";
+                });
+
+                // Close modal when clicking outside
+                window.addEventListener("click", function (event) {
+                    if (event.target === modal) {
+                        modal.style.display = "none";
+                    }
                 });
             });
-
-            // Close modal
-            closeModal.addEventListener("click", function () {
-                modal.style.display = "none";
-            });
-
-            // Close modal when clicking outside
-            window.addEventListener("click", function (event) {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            });
-        });
-
         </script>
-        <!-- script for pricing of appointment-->
-        <script>
 
-        </script>
         <!--script for saving data in table of appointment-->
         <script>
-
             // Function to show relevant fields based on appointment type
             function showRelevantFields() {
                 const appointmentType = document.getElementById("appointmentType").value.toLowerCase();
@@ -532,9 +479,27 @@
                 }
             }
 
-
             document.getElementById('appointmentForm').addEventListener('submit', function (e) {
                 e.preventDefault(); // Prevent form from submitting traditionally
+
+                // Validate 1-hour duration on client side
+                const timeStart = document.getElementById('timeStart').value;
+                const timeEnd = document.getElementById('timeEnd').value;
+
+                const start = new Date(`1970-01-01T${timeStart}:00`);
+                const end = new Date(`1970-01-01T${timeEnd}:00`);
+                const diffMs = end - start;
+                const diffHours = diffMs / (1000 * 60 * 60);
+
+                if (diffHours > 1) {
+                    alert("Appointments can only be booked for 1 hour. Please adjust your time selection.");
+                    return;
+                }
+
+                if (diffHours <= 0) {
+                    alert("End time must be after start time.");
+                    return;
+                }
 
                 let formData = new FormData(this);
 
@@ -560,15 +525,12 @@
                             alert("Error: " + data.message);
                         }
                     } catch (error) {
-                        console.error("JSON Parse Error:", error, text); // Show error and response
+                        console.error("JSON Parse Error:", error, text);
                         alert("Unexpected server response. Check console for details.");
                     }
                 })
                 .catch(error => console.error('Fetch Error:', error));
-
             });
         </script>
-
-
-</body>
+    </body>
 </html>

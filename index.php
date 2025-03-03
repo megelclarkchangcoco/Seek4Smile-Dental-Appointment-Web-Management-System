@@ -16,7 +16,7 @@
 
 
    <link rel="stylesheet" href="css/index.css">
-   <title>Abesamis Dental Clinic</title>
+   <title>seek4smiles Dental Clinic</title>
 
    <!-- swiper css link  -->
    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css"/>

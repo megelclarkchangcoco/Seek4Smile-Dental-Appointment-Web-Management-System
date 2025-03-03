@@ -30,8 +30,14 @@ while ($row = mysqli_fetch_assoc($appointmentResult)) {
     $appointments[$row['PatientID']] = $row;
 }
 
-// Handle view button click
+// Handle view button click and fetch additional patient details
 $selectedPatient = null;
+$totalCompletedAppointments = 0;
+$totalPenaltyAppointments   = 0;
+$lastCompletedAppointment   = null;
+$appointmentsHistoryResult  = null;
+$prescriptionResult         = null;
+$medicalRecordResult        = null;
 if (isset($_GET['view'])) {
     $patientID = $_GET['view'];
     $selectedPatientQuery  = "SELECT * FROM patient WHERE PatientID = '$patientID'";
@@ -83,7 +89,7 @@ if (isset($_GET['view'])) {
         die("Error fetching appointments: " . mysqli_error($connection));
     }
     
-    // --- Ensure PrescriptionID is populated ---
+    // Ensure PrescriptionID is populated
     mysqli_query($connection, "UPDATE prescription SET PrescriptionID = CONCAT('PREID', LPAD(id, 4, '0')) WHERE PrescriptionID IS NULL OR PrescriptionID = ''");
     
     // New prescription query joining normalized tables
@@ -136,6 +142,10 @@ if (isset($_GET['view'])) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <script>
+        // This variable tells our JS whether a patient is selected.
+        var patientSelected = <?php echo $selectedPatient ? 'true' : 'false'; ?>;
+    </script>
 </head>
 <body> 
     <!-- Main wrapper -->   
@@ -356,8 +366,6 @@ if (isset($_GET['view'])) {
                                         <tbody>
                                             <?php if ($prescriptionResult && mysqli_num_rows($prescriptionResult) > 0): ?>
                                                 <?php while ($prescription = mysqli_fetch_assoc($prescriptionResult)): ?>
-                                                    <!-- For the Overview table, you could display aggregated data.
-                                                         Here we use the fields from the normalized query if needed. -->
                                                     <tr>
                                                         <td><?= htmlspecialchars($prescription['Medicine']) ?></td>
                                                         <td><?= htmlspecialchars($prescription['Dosage']) ?></td>
@@ -402,7 +410,6 @@ if (isset($_GET['view'])) {
                                     <?php endif; ?>
                                 </div>
 
-                                <!-- Files and Documents Section (e.g., Laboratory Results) -->
                                 <div class="files_and_documents">
                                     <div class="file_header">
                                         <h3>Laboratory</h3>
@@ -412,7 +419,6 @@ if (isset($_GET['view'])) {
                                     </div>
                                 </div>
 
-                                <!-- Upload Modal -->
                                 <div id="uploadModal" class="modal">
                                     <div class="modal-content">
                                         <span class="close" onclick="closeUploadModal()">&times;</span>
@@ -577,15 +583,13 @@ if (isset($_GET['view'])) {
                             <?php endif; ?>
                         </div>
                     </div>
-                    <!-- Medications Tab (Normalized Prescription Details) -->
-                    <?php
+                    <!-- Medications Tab -->
+                    <div class="medication-content" style="display: none;">
+                        <?php
+                        // Re-run the prescription query for medications tab if necessary
                         if ($selectedPatient) {
                             $patientID = $selectedPatient['PatientID'];
-                            
-                            // Ensure PrescriptionID is populated for all records
                             mysqli_query($connection, "UPDATE prescription SET PrescriptionID = CONCAT('PREID', LPAD(id, 4, '0')) WHERE PrescriptionID IS NULL OR PrescriptionID = ''");
-                            
-                            // New prescription query joining normalized tables
                             $prescriptionQuery = "
                                 SELECT 
                                 p.PrescriptionID, 
@@ -612,45 +616,37 @@ if (isset($_GET['view'])) {
                             }
                         }
                         ?>
-
-                        <div class="medication-content">
-                            <?php if ($prescriptionResult && mysqli_num_rows($prescriptionResult) > 0): ?>
-                                <?php while ($prescription = mysqli_fetch_assoc($prescriptionResult)): ?>
-                                    <div class="medication_container">
-                                        <div class="block_container">
-                                            <div class="details_container">
-                                                <div class="leftside">
-                                                    <img src="icons/dentist/records_icon.png" alt="Record Icon">
-                                                    <div class="filedeets">
-                                                        <h2 class="big_file_name">
-                                                            Prescription from Dr. <?php echo htmlspecialchars($prescription['DoctorFirst'] . ' ' . $prescription['DoctorLast']); ?>
-                                                        </h2>
-                                                        <div class="metadata">
-                                                            <p class="file_date"><?php echo date("F j, Y", strtotime($prescription['PrescriptionDate'])); ?></p>
-                                                            <p>•</p>
-                                                            <p class="file_time"><?php echo date("h:i A", strtotime($prescription['created_at'])); ?></p>
-                                                            <p>•</p>
-                                                            <p class="file_tag">Prescription</p>
-                                                        </div>
+                        <?php if ($prescriptionResult && mysqli_num_rows($prescriptionResult) > 0): ?>
+                            <?php while ($prescription = mysqli_fetch_assoc($prescriptionResult)): ?>
+                                <div class="medication_container">
+                                    <div class="block_container">
+                                        <div class="details_container">
+                                            <div class="leftside">
+                                                <img src="icons/dentist/records_icon.png" alt="Record Icon">
+                                                <div class="filedeets">
+                                                    <h2 class="big_file_name">
+                                                        Prescription from Dr. <?php echo htmlspecialchars($prescription['DoctorFirst'] . ' ' . $prescription['DoctorLast']); ?>
+                                                    </h2>
+                                                    <div class="metadata">
+                                                        <p class="file_date"><?php echo date("F j, Y", strtotime($prescription['PrescriptionDate'])); ?></p>
+                                                        <p>•</p>
+                                                        <p class="file_time"><?php echo date("h:i A", strtotime($prescription['created_at'])); ?></p>
+                                                        <p>•</p>
+                                                        <p class="file_tag">Prescription</p>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="prescription_details">
-                                                    <p><strong>Medicine:</strong> <?php echo htmlspecialchars($prescription['Medicine']); ?></p>
-                                                    <p><strong>Dosage:</strong> <?php echo htmlspecialchars($prescription['Dosage']); ?></p>
-                                                    <p><strong>Instructions:</strong> <?php echo htmlspecialchars($prescription['Instructions']); ?></p>
-                                                    <p><strong>Refill Status:</strong> <?php echo htmlspecialchars($prescription['RefillStatus']); ?></p>
-                                                </div> -->
-                                                <a href="prescription_generate_pdf.php?prescription_id=<?php echo $prescription['PrescriptionID']; ?>" target="_blank">
-                                                    <button class="view_button">VIEW</button>
-                                                </a>
                                             </div>
+                                            <a href="prescription_generate_pdf.php?prescription_id=<?php echo $prescription['PrescriptionID']; ?>" target="_blank">
+                                                <button class="view_button">VIEW</button>
+                                            </a>
                                         </div>
                                     </div>
-                                <?php endwhile; ?>
-                            <?php else: ?>
-                                <p>No prescription records found for this patient.</p>
-                            <?php endif; ?>
-                        </div>
+                                </div>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <p>No prescription records found for this patient.</p>
+                        <?php endif; ?>
+                    </div>
 
                 </div>
             </div>
@@ -661,7 +657,7 @@ if (isset($_GET['view'])) {
     <script src="js/dental_assistant.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Tab switching function exposed globally
+        // Function to switch tab contents
         function showTabContent(contentId) {
             const contents = document.querySelectorAll('.content > div');
             contents.forEach(content => content.style.display = 'none');
@@ -677,12 +673,12 @@ if (isset($_GET['view'])) {
             }
         }
         window.showTabContent = showTabContent;
-        // Default tab
+        // Default tab on page load
         document.addEventListener("DOMContentLoaded", function () {
             showTabContent('overview-content');
         });
 
-        // Section toggling for patient list vs. patient detail view
+        // Toggle between patient list and detail view based on patientSelected variable
         document.addEventListener("DOMContentLoaded", function () {
             function showRightPanelSection(sectionId) {
                 const content = document.getElementById("content");
@@ -695,26 +691,28 @@ if (isset($_GET['view'])) {
                     if (patientSection) { patientSection.style.display = "none"; }
                 }
             }
+            
+            if (patientSelected) {
+                showRightPanelSection("patient-section");
+            } else {
+                showRightPanelSection("content");
+            }
+            
+            document.querySelectorAll(".view_btn").forEach(viewBtn => {
+                viewBtn.addEventListener("click", function () {
+                    showRightPanelSection("patient-section");
+                });
+            });
             document.querySelectorAll(".close").forEach(closeBtn => {
                 closeBtn.addEventListener("click", function (event) {
                     event.stopPropagation();
                     showRightPanelSection("content");
                 });
             });
-            document.querySelectorAll(".view_btn").forEach(viewBtn => {
-                viewBtn.addEventListener("click", function () {
-                    showRightPanelSection("patient-section");
-                });
-            });
-            if (localStorage.getItem("patientSectionVisible") !== "true") {
-                const patientLink = document.querySelector(".sub-navigation a[href='#'][onclick*='patient-section']");
-                if (patientLink) patientLink.style.display = "none";
-                showRightPanelSection("content");
-            }
             window.showRightPanelSection = showRightPanelSection;
         });
 
-        // Chart rendering
+        // Render appointment pie chart
         document.addEventListener('DOMContentLoaded', function () {
             var canvas = document.getElementById('appointmentPieChart');
             if (canvas) {
@@ -740,7 +738,7 @@ if (isset($_GET['view'])) {
             }
         });
         
-        // Modal functions
+        // Modal functions for file upload
         function openUploadModal() {
             document.getElementById("uploadModal").style.display = "block";
         }
@@ -754,6 +752,7 @@ if (isset($_GET['view'])) {
             }
         }
 
+        // Patient search filtering
         document.getElementById('input-box').addEventListener('keyup', function() {
             const filter = this.value.toLowerCase();
             const rows = document.querySelectorAll('.patient_table tbody tr');
@@ -764,7 +763,6 @@ if (isset($_GET['view'])) {
                 row.style.display = text.indexOf(filter) > -1 ? '' : 'none';
             });
         });
-
     </script>
 </body>
 </html>

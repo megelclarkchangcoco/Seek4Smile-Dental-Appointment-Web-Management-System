@@ -46,10 +46,26 @@ if (!empty($missingFields)) {
     exit;
 }
 
-mysqli_begin_transaction($connection); // ✅ START TRANSACTION
+// Validate 1-hour duration
+$startTime = new DateTime($timeStart);
+$endTime = new DateTime($timeEnd);
+$interval = $startTime->diff($endTime);
+$hours = $interval->h + ($interval->i / 60); // Convert minutes to hours
+
+if ($hours > 1) {
+    echo json_encode(['status' => 'error', 'message' => 'Appointments can only be 1 hour long']);
+    exit;
+}
+
+if ($endTime <= $startTime) {
+    echo json_encode(['status' => 'error', 'message' => 'End time must be after start time']);
+    exit;
+}
+
+mysqli_begin_transaction($connection); // Start transaction
 
 try {
-    // 🔹 **1️⃣ CHECK FOR OVERLAPPING APPOINTMENTS**
+    // Check for overlapping appointments
     $overlapQuery = "SELECT COUNT(*) FROM appointment 
                      WHERE DentistID = ? 
                      AND AppointmentDate = ? 
@@ -69,7 +85,7 @@ try {
         throw new Exception("This time slot is already booked for this dentist.");
     }
 
-    // 🔹 **2️⃣ INSERT INTO `appointment` TABLE**
+    // Insert into `appointment` table
     $query = "INSERT INTO appointment 
               (PatientID, DentistID, AppointmentType, AppointmentLaboratory, AppointmentProcedure, AppointmentTreatment, AppointmentDate, TimeStart, TimeEnd, PaymentType, Reason, AppointmentStatus) 
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'scheduled')";
@@ -81,7 +97,7 @@ try {
         throw new Exception('Error saving appointment: ' . mysqli_error($connection));
     }
 
-    // ✅ **Retrieve the LAST INSERTED AppointmentID (Trigger Generated)**
+    // Retrieve the last inserted AppointmentID
     $query_get_id = "SELECT AppointmentID FROM appointment WHERE PatientID = ? AND DentistID = ? ORDER BY CreatedAt DESC LIMIT 1";
     $stmt_get_id = mysqli_prepare($connection, $query_get_id);
     mysqli_stmt_bind_param($stmt_get_id, "ss", $patientID, $dentistID);
@@ -94,7 +110,7 @@ try {
         throw new Exception('Error retrieving AppointmentID after insert.');
     }
 
-    // 🔹 **3️⃣ FETCH PRICING DETAILS**
+    // Fetch pricing details
     function getPrice($connection, $type, $subcategory) {
         $query = "SELECT Price FROM appointment_pricing WHERE AppointmentType = ? AND (SubCategory = ? OR SubCategory IS NULL)";
         $stmt = mysqli_prepare($connection, $query);
@@ -111,10 +127,10 @@ try {
     $procedureFee = $appointmentProcedure ? getPrice($connection, 'Procedure', $appointmentProcedure) : 0;
     $treatmentFee = $appointmentTreatment ? getPrice($connection, 'Treatment', $appointmentTreatment) : 0;
 
-    // ✅ **Calculate Total Fee**
+    // Calculate Total Fee
     $totalFee = $appointmentFee + $laboratoryFee + $procedureFee + $treatmentFee;
 
-    // 🔹 **4️⃣ INSERT INTO `appointmentbilling` TABLE**
+    // Insert into `appointmentbilling` table
     $billingQuery = "INSERT INTO appointmentbilling 
                     (AppointmentID, PatientID, AppointmentFee, LaboratoryFee, ProcedureFee, TreatmentFee, PaymentType, PaymentStatus) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, 'unpaid')";
@@ -126,16 +142,16 @@ try {
         throw new Exception('Error saving billing details: ' . mysqli_error($connection));
     }
 
-    // 🔹 **5️⃣ COMMIT TRANSACTION**
+    // Commit transaction
     mysqli_commit($connection);
     echo json_encode(['status' => 'success', 'message' => 'Appointment and billing saved successfully']);
 
 } catch (Exception $e) {
-    mysqli_rollback($connection); // ❌ ROLLBACK ON ERROR
+    mysqli_rollback($connection); // Rollback on error
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
 
-// ✅ Close Statements & Connection
+// Close statements & connection
 if (isset($stmt)) {
     mysqli_stmt_close($stmt);
 }

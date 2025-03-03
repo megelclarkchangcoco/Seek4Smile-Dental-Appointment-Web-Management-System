@@ -35,6 +35,7 @@ $stmt = $mysqli->prepare("INSERT INTO `dentistassistant`
 foreach ($assistants as $assistant) {
     // Hash the password
     $hashedPassword = password_hash($assistant[6], PASSWORD_DEFAULT);
+
     
     // Bind parameters (8 parameters total)
     $stmt->bind_param(

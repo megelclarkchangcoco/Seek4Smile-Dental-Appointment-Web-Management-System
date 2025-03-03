@@ -3,11 +3,11 @@ header('Content-Type: application/json'); // Ensure the response is always JSON
 include 'connection.php';
 session_start();
 
-// ✅ Enable error reporting (logs PHP errors)
+//  Enable error reporting (logs PHP errors)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// ✅ Start with a response array
+//  Start with a response array
 $response = ['status' => 'error', 'message' => 'An unknown error occurred.'];
 
 try {
@@ -27,7 +27,7 @@ try {
         throw new Exception("Missing required fields.");
     }
 
-    // ✅ Validate the card
+    //  Validate the card
     $cardQuery = "SELECT * FROM card WHERE PatientID = ? AND CardID = ? AND CVV = ?";
     $stmt = mysqli_prepare($connection, $cardQuery);
     mysqli_stmt_bind_param($stmt, "sss", $patientID, $cardID, $cvv);
@@ -40,7 +40,7 @@ try {
 
     mysqli_begin_transaction($connection);
 
-    // ✅ Insert payment into `payments` table
+    //  Insert payment into `payments` table
     $queryPayment = "INSERT INTO payments (BillingID, PaymentAmount, PaymentDate, PaymentMethod) 
                      VALUES (?, ?, ?, ?)";
     $stmtPayment = mysqli_prepare($connection, $queryPayment);
@@ -50,7 +50,7 @@ try {
         throw new Exception("Error saving payment: " . mysqli_error($connection));
     }
 
-    // ✅ Get total amount paid
+    //  Get total amount paid
     $queryTotalPaid = "SELECT SUM(PaymentAmount) FROM payments WHERE BillingID = ?";
     $stmtTotalPaid = mysqli_prepare($connection, $queryTotalPaid);
     mysqli_stmt_bind_param($stmtTotalPaid, "s", $billingID);
@@ -59,7 +59,7 @@ try {
     mysqli_stmt_fetch($stmtTotalPaid);
     mysqli_stmt_close($stmtTotalPaid);
 
-    // ✅ Get total fee
+    //  Get total fee
     $queryTotalFee = "SELECT TotalFee, PaymentType FROM appointmentbilling WHERE BillingID = ?";
     $stmtTotalFee = mysqli_prepare($connection, $queryTotalFee);
     mysqli_stmt_bind_param($stmtTotalFee, "s", $billingID);
@@ -68,7 +68,7 @@ try {
     mysqli_stmt_fetch($stmtTotalFee);
     mysqli_stmt_close($stmtTotalFee);
 
-    // ✅ If first payment was cash but now is card, update it
+    //  If first payment was cash but now is card, update it
     if (strtolower($currentPaymentMethod) == "cash") {
         $updatePaymentMethod = "UPDATE appointmentbilling SET PaymentType = 'Card' WHERE BillingID = ?";
         $stmtUpdateMethod = mysqli_prepare($connection, $updatePaymentMethod);
@@ -77,7 +77,7 @@ try {
         mysqli_stmt_close($stmtUpdateMethod);
     }
 
-    // ✅ Update PaymentStatus: "paid" or "partial"
+    //  Update PaymentStatus: "paid" or "partial"
     if ($totalPaid >= $totalFee) {
         $updateBilling = "UPDATE appointmentbilling SET PaymentStatus = 'paid' WHERE BillingID = ?";
     } else {
@@ -98,6 +98,6 @@ try {
     $response = ['status' => 'error', 'message' => $e->getMessage()];
 }
 
-echo json_encode($response); // ✅ Ensure JSON response always
+echo json_encode($response); //  Ensure JSON response always
 exit;
 ?>
